@@ -8,7 +8,6 @@ import "./App.css";
 const AppContainer = styled.div`
   width: 100%;
   height: var(--app-height);
-  border: 1px solid red;
   display: flex;
   justify-content: center;
   align-items: center;
