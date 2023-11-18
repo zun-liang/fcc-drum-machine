@@ -17,8 +17,9 @@ import BldH1 from "./assets/sounds/Bld_H1.mp3";
 import PunchyKick from "./assets/sounds/punchy_kick_1.mp3";
 import SideStick from "./assets/sounds/side_stick_1.mp3";
 import Snare from "./assets/sounds/Brk_Snr.mp3";
-
-import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFreeCodeCamp } from "@fortawesome/free-brands-svg-icons";
+import { useState, useRef } from "react";
 
 const DrumContainer = styled.div`
   width: 660px;
@@ -28,6 +29,7 @@ const DrumContainer = styled.div`
   padding: 1.5rem;
   display: flex;
   justify-content: space-between;
+  position: relative;
 `;
 const PadsContainer = styled.div`
   width: 55%;
@@ -35,7 +37,7 @@ const PadsContainer = styled.div`
   flex-wrap: wrap;
   gap: 10px;
 `;
-const DrumPad = styled.button`
+const DrumPad = styled.label`
   width: 100px;
   height: 80px;
   border: none;
@@ -44,6 +46,13 @@ const DrumPad = styled.button`
   box-shadow: 3px 3px 5px black;
   font-family: "Russo One", sans-serif;
   font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`;
+const RadioButton = styled.input`
+  display: none;
 `;
 const ControlsContainer = styled.div`
   width: 40%;
@@ -61,8 +70,9 @@ const PowerControl = styled.div`
   height: 24px;
   background-color: black;
   padding: 3px;
+  cursor: pointer;
   display: flex;
-  justify-content: flex-end;
+  justify-content: ${({ $power }) => ($power ? "flex-end" : "flex-start")};
   & > div {
     width: 23px;
     height: 18px;
@@ -70,12 +80,16 @@ const PowerControl = styled.div`
   }
 `;
 const BankControl = styled(PowerControl)`
-  justify-content: flex-start;
+  justify-content: ${({ $kit }) =>
+    $kit === "Heater Kit" ? "flex-start" : "flex-end"};
 `;
-const ClipString = styled.p`
+const DisplayString = styled.p`
   width: 200px;
   height: 50px;
   background-color: #8d8d8d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const VolumeSlider = styled.input`
   -webkit-appearance: none;
@@ -86,6 +100,7 @@ const VolumeSlider = styled.input`
   box-shadow: 1px 1px 1px black;
   background: #3d3c3c;
   margin: 0.5rem 0;
+  cursor: pointer;
 
   &::-webkit-slider-runnable-track {
     width: 100%;
@@ -104,7 +119,7 @@ const VolumeSlider = styled.input`
     box-shadow: 1px 1px 1px black;
     cursor: pointer;
     position: relative;
-    bottom: 10px;
+    bottom: 12px;
   }
 
   /* Firefox */
@@ -122,101 +137,252 @@ const VolumeSlider = styled.input`
     width: 8px;
     height: 25px;
     background: blue;
+    border: none;
+    border-radius: 0;
     box-shadow: 1px 1px 1px black;
     cursor: pointer;
   }
 `;
+const IconContainer = styled.div`
+  height: 20px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  & > span {
+    font-size: 1.3rem;
+    font-style: italic;
+  }
+`;
+const StyledIcon = styled(FontAwesomeIcon)`
+  font-size: 1.3rem;
+  border-bottom: 1px solid black;
+`;
+//currently not bold or italic
 
 const Drum = () => {
-  const [clipName, setClipName] = useState("");
+  const focusRef = useRef("");
   const [volume, setVolume] = useState("");
+  const handleVolume = (e) => {
+    setVolume(e.target.value);
+    focusRef.current = `Volume: ${volume}`;
+  };
+  //volume doesn't seem to be able to reach 0 or 100
+
   const [power, setPower] = useState(true);
+  const handlePower = () => setPower((prev) => !prev);
+
   const [kit, setKit] = useState("Heater Kit");
+  const handleBank = () => {
+    if (kit === "Heater Kit") {
+      setKit("Smooth Piano Kit");
+      focusRef.current = "Smooth Piano Kit";
+    } else {
+      setKit("Heater Kit");
+      focusRef.current = "Heater Kit";
+    }
+  };
+
   return (
     <DrumContainer id="drum-machine">
       <PadsContainer>
+        <RadioButton type="radio" id="pad-q" name="drum-pad" />
         <DrumPad
           className="drum-pad"
-          id="pad-q"
-          onClick={() => setClipName("Heater 1")}
+          htmlFor="pad-q"
+          onClick={() => {
+            if (kit === "Heater Kit") {
+              focusRef.current = "Heater 1";
+            } else {
+              focusRef.current = "Chord 1";
+            }
+          }}
         >
-          Q<audio src={Heater1} className="clip" id="Q"></audio>
+          Q
+          <audio
+            src={kit === "Heater Kit" ? Heater1 : Chord1}
+            className="clip"
+            id="Q"
+          ></audio>
         </DrumPad>
+        <RadioButton type="radio" id="pad-w" name="drum-pad" />
         <DrumPad
           className="drum-pad"
-          id="pad-w"
-          onClick={() => setClipName("Heater 2")}
+          htmlFor="pad-w"
+          onClick={() => {
+            if (kit === "Heater Kit") {
+              focusRef.current = "Heater 2";
+            } else {
+              focusRef.current = "Chord 2";
+            }
+          }}
         >
-          W<audio src={Heater2} className="clip" id="W"></audio>
+          W
+          <audio
+            src={kit === "Heater Kit" ? Heater2 : Chord2}
+            className="clip"
+            id="W"
+          ></audio>
         </DrumPad>
+        <RadioButton type="radio" id="pad-e" name="drum-pad" />
         <DrumPad
           className="drum-pad"
-          id="pad-e"
-          onClick={() => setClipName("Heater 3")}
+          htmlFor="pad-e"
+          onClick={() => {
+            if (kit === "Heater Kit") {
+              focusRef.current = "Heater 3";
+            } else {
+              focusRef.current = "Chord 3";
+            }
+          }}
         >
-          E<audio src={Heater3} className="clip" id="E"></audio>
+          E
+          <audio
+            src={kit === "Heater Kit" ? Heater3 : Chord3}
+            className="clip"
+            id="E"
+          ></audio>
         </DrumPad>
+        <RadioButton type="radio" id="pad-a" name="drum-pad" />
         <DrumPad
           className="drum-pad"
-          id="pad-a"
-          onClick={() => setClipName("Heater 4")}
+          htmlFor="pad-a"
+          onClick={() => {
+            if (kit === "Heater Kit") {
+              focusRef.current = "Heater 4";
+            } else {
+              focusRef.current = "Shaker";
+            }
+          }}
         >
-          A<audio src={Heater4} className="clip" id="A"></audio>
+          A
+          <audio
+            src={kit === "Heater Kit" ? Heater4 : Shaker}
+            className="clip"
+            id="A"
+          ></audio>
         </DrumPad>
+        <RadioButton type="radio" id="pad-s" name="drum-pad" />
         <DrumPad
           className="drum-pad"
-          id="pad-s"
-          onClick={() => setClipName("Clap")}
+          htmlFor="pad-s"
+          onClick={() => {
+            if (kit === "Heater Kit") {
+              focusRef.current = "Clap";
+            } else {
+              focusRef.current = "Open HH";
+            }
+          }}
         >
-          S<audio src={Clap} className="clip" id="S"></audio>
+          S
+          <audio
+            src={kit === "Heater Kit" ? Clap : DryOhh}
+            className="clip"
+            id="S"
+          ></audio>
         </DrumPad>
+        <RadioButton type="radio" id="pad-d" name="drum-pad" />
         <DrumPad
           className="drum-pad"
-          id="pad-d"
-          onClick={() => setClipName("Open HH")}
+          htmlFor="pad-d"
+          onClick={() => {
+            if (kit === "Heater Kit") {
+              focusRef.current = "Open HH";
+            } else {
+              focusRef.current = "Closed HH";
+            }
+          }}
         >
-          D<audio src={OpenHH} className="clip" id="D"></audio>
+          D
+          <audio
+            src={kit === "Heater Kit" ? OpenHH : BldH1}
+            className="clip"
+            id="D"
+          ></audio>
         </DrumPad>
+        <RadioButton type="radio" id="pad-z" name="drum-pad" />
         <DrumPad
           className="drum-pad"
-          id="pad-z"
-          onClick={() => setClipName("Kick n' Hat")}
+          htmlFor="pad-z"
+          onClick={() => {
+            if (kit === "Heater Kit") {
+              focusRef.current = "Kick n' Hat";
+            } else {
+              focusRef.current = "Punchy Kick";
+            }
+          }}
         >
-          Z<audio src={KickNHat} className="clip" id="Z"></audio>
+          Z
+          <audio
+            src={kit === "Heater Kit" ? KickNHat : PunchyKick}
+            className="clip"
+            id="Z"
+          ></audio>
         </DrumPad>
+        <RadioButton type="radio" id="pad-x" name="drum-pad" />
         <DrumPad
           className="drum-pad"
-          id="pad-x"
-          onClick={() => setClipName("Kick")}
+          htmlFor="pad-x"
+          onClick={() => {
+            if (kit === "Heater Kit") {
+              focusRef.current = "Kick";
+            } else {
+              focusRef.current = "Side Stick";
+            }
+          }}
         >
-          X<audio src={Kick} className="clip" id="X"></audio>
+          X
+          <audio
+            src={kit === "Heater Kit" ? Kick : SideStick}
+            className="clip"
+            id="X"
+          ></audio>
         </DrumPad>
+        <RadioButton type="radio" id="pad-c" name="drum-pad" />
         <DrumPad
           className="drum-pad"
-          id="pad-c"
-          onClick={() => setClipName("Closed HH")}
+          htmlFor="pad-c"
+          onClick={() => {
+            if (kit === "Heater Kit") {
+              focusRef.current = "Closed HH";
+            } else {
+              focusRef.current = "Snare";
+            }
+          }}
         >
-          C<audio src={ClosedHH} className="clip" id="C"></audio>
+          C
+          <audio
+            src={kit === "Heater Kit" ? ClosedHH : Snare}
+            className="clip"
+            id="C"
+          ></audio>
         </DrumPad>
       </PadsContainer>
       <ControlsContainer>
         <ControlName>Power</ControlName>
-        <PowerControl onClick={() => setPower((prev) => !prev)}>
-          <div></div>
+        <PowerControl onClick={handlePower} $power={power}>
+          <div />
         </PowerControl>
-        <ClipString id="display">{clipName}</ClipString>
+        <DisplayString id="display">{focusRef.current}</DisplayString>
         <VolumeSlider
           type="range"
           id="volume"
           name="volume"
           min="0"
           max="100"
+          onChange={handleVolume}
         />
         <ControlName>Bank</ControlName>
-        <BankControl onClick={() => setKit("Smooth Piano Kit")}>
-          <div></div>
+        <BankControl onClick={handleBank} $kit={kit}>
+          <div />
         </BankControl>
       </ControlsContainer>
+      <IconContainer>
+        <span>FCC</span>
+        <StyledIcon icon={faFreeCodeCamp} />
+      </IconContainer>
     </DrumContainer>
   );
 };
