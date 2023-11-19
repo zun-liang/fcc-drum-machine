@@ -12,8 +12,8 @@ import Chord1 from "./assets/sounds/Chord_1.mp3";
 import Chord2 from "./assets/sounds/Chord_2.mp3";
 import Chord3 from "./assets/sounds/Chord_3.mp3";
 import Shaker from "./assets/sounds/Give_us_a_light.mp3";
-import DryOhh from "./assets/sounds/Dry_Ohh.mp3";
-import BldH1 from "./assets/sounds/Bld_H1.mp3";
+import OpenHH2 from "./assets/sounds/Dry_Ohh.mp3";
+import ClosedHH2 from "./assets/sounds/Bld_H1.mp3";
 import PunchyKick from "./assets/sounds/punchy_kick_1.mp3";
 import SideStick from "./assets/sounds/side_stick_1.mp3";
 import Snare from "./assets/sounds/Brk_Snr.mp3";
@@ -163,10 +163,9 @@ const StyledIcon = styled(FontAwesomeIcon)`
   border-bottom: 1px solid black;
   transform: skewX(-15deg);
 `;
-//currently not bold
 
 const Drum = () => {
-  const focusRef = useRef("");
+  const focusRef = useRef(null);
 
   const [power, setPower] = useState(true);
   const [volume, setVolume] = useState(30);
@@ -176,10 +175,9 @@ const Drum = () => {
   const switchPower = () => setPower((prev) => !prev);
 
   const changeVolume = (e) => {
-    setVolume(e.target.value);
-    focusRef.current = `Volume: ${volume}`;
+    setVolume(parseInt(e.target.value, 10));
+    focusRef.current = `Volume: ${parseInt(e.target.value, 10)}`;
   };
-  //volume doesn't seem to be able to reach 0 or 100
 
   const handleBank = () => {
     if (kit === "Heater Kit") {
@@ -191,234 +189,128 @@ const Drum = () => {
     }
   };
 
-  const playPadQ = () => {
-    setKey("Q");
-    document.getElementById("Q").play();
-    document.getElementById("Q").currentTime = 0;
-    document.getElementById("Q").volume = volume / 100;
-    if (kit === "Heater Kit") {
-      focusRef.current = "Heater 1";
-    } else {
-      focusRef.current = "Chord 1";
-    }
-  };
-  const playPadW = () => {
-    setKey("W");
-    document.getElementById("W").play();
-    document.getElementById("W").currentTime = 0;
-    document.getElementById("W").volume = volume / 100;
-    if (kit === "Heater Kit") {
-      focusRef.current = "Heater 2";
-    } else {
-      focusRef.current = "Chord 2";
-    }
-  };
-  const playPadE = () => {
-    setKey("E");
-    document.getElementById("E").play();
-    document.getElementById("E").currentTime = 0;
-    document.getElementById("E").volume = volume / 100;
-    if (kit === "Heater Kit") {
-      focusRef.current = "Heater 3";
-    } else {
-      focusRef.current = "Chord 3";
-    }
-  };
-  const playPadA = () => {
-    setKey("A");
-    document.getElementById("A").play();
-    document.getElementById("A").currentTime = 0;
-    document.getElementById("A").volume = volume / 100;
-    if (kit === "Heater Kit") {
-      focusRef.current = "Heater 4";
-    } else {
-      focusRef.current = "Shaker";
-    }
-  };
-  const playPadS = () => {
-    setKey("S");
-    document.getElementById("S").play();
-    document.getElementById("S").currentTime = 0;
-    document.getElementById("S").volume = volume / 100;
-    if (kit === "Heater Kit") {
-      focusRef.current = "Clap";
-    } else {
-      focusRef.current = "Open HH";
-    }
-  };
-  const playPadD = () => {
-    setKey("D");
-    document.getElementById("D").play();
-    document.getElementById("D").currentTime = 0;
-    document.getElementById("D").volume = volume / 100;
-    if (kit === "Heater Kit") {
-      focusRef.current = "Open HH";
-    } else {
-      focusRef.current = "Closed HH";
-    }
-  };
-  const playPadZ = () => {
-    setKey("Z");
-    document.getElementById("Z").play();
-    document.getElementById("Z").currentTime = 0;
-    document.getElementById("Z").volume = volume / 100;
-    if (kit === "Heater Kit") {
-      focusRef.current = "Kick n' Hat";
-    } else {
-      focusRef.current = "Punchy Kick";
-    }
-  };
-  const playPadX = () => {
-    setKey("X");
-    document.getElementById("X").play();
-    document.getElementById("X").currentTime = 0;
-    document.getElementById("X").volume = volume / 100;
-    if (kit === "Heater Kit") {
-      focusRef.current = "Kick";
-    } else {
-      focusRef.current = "Side Stick";
-    }
-  };
-  const playPadC = () => {
-    setKey("C");
-    document.getElementById("C").play();
-    document.getElementById("C").currentTime = 0;
-    document.getElementById("C").volume = volume / 100;
-    if (kit === "Heater Kit") {
-      focusRef.current = "Closed HH";
-    } else {
-      focusRef.current = "Snare";
-    }
-  };
-
-  const clickPad = (e) => {
-    if (power) {
-      if (e.target.innerText === "Q") {
-        playPadQ();
-      } else if (e.target.innerText === "W") {
-        playPadW();
-      } else if (e.target.innerText === "E") {
-        playPadE();
-      } else if (e.target.innerText === "A") {
-        playPadA();
-      } else if (e.target.innerText === "S") {
-        playPadS();
-      } else if (e.target.innerText === "D") {
-        playPadD();
-      } else if (e.target.innerText === "Z") {
-        playPadZ();
-      } else if (e.target.innerText === "X") {
-        playPadX();
-      } else if (e.target.innerText === "C") {
-        playPadC();
-      }
-    }
-  };
-
-  const pressKey = (e) => {
-    if (e?.code === "KeyQ") {
-      playPadQ();
-      // document
-      //   .getElementById("pad-q")
-      //   .style.setProperty("background-color", "orange");
-    } else if (e?.code === "KeyW") {
-      playPadW();
-    } else if (e?.code === "KeyE") {
-      playPadE();
-    } else if (e?.code === "KeyA") {
-      playPadA();
-    } else if (e?.code === "KeyS") {
-      playPadS();
-    } else if (e?.code === "KeyD") {
-      playPadD();
-    } else if (e?.code === "KeyZ") {
-      playPadZ();
-    } else if (e?.code === "KeyX") {
-      playPadX();
-    } else if (e?.code === "KeyC") {
-      playPadC();
-    }
-  };
-
   const keysArr = ["Q", "W", "E", "A", "S", "D", "Z", "X", "C"];
 
-  const pads = keysArr.map((key) => {
-    const audioSrc =
-      key === "Q" && kit === "Heater Kit"
-        ? Heater1
-        : key === "Q" && kit === "Smooth Piano Kit"
-        ? Chord1
-        : key === "W" && kit === "Heater Kit"
-        ? Heater2
-        : key === "W" && kit === "Smooth Piano Kit"
-        ? Chord2
-        : key === "E" && kit === "Heater Kit"
-        ? Heater3
-        : key === "E" && kit === "Smooth Piano Kit"
-        ? Chord3
-        : key === "A" && kit === "Heater Kit"
-        ? Heater4
-        : key === "A" && kit === "Smooth Piano Kit"
-        ? Shaker
-        : key === "S" && kit === "Heater Kit"
-        ? Clap
-        : key === "S" && kit === "Smooth Piano Kit"
-        ? DryOhh
-        : key === "D" && kit === "Heater Kit"
-        ? OpenHH
-        : key === "D" && kit === "Smooth Piano Kit"
-        ? BldH1
-        : key === "Z" && kit === "Heater Kit"
-        ? KickNHat
-        : key === "Z" && kit === "Smooth Piano Kit"
-        ? PunchyKick
-        : key === "X" && kit === "Heater Kit"
-        ? Kick
-        : key === "X" && kit === "Smooth Piano Kit"
-        ? SideStick
-        : key === "C" && kit === "Heater Kit"
-        ? ClosedHH
-        : Snare;
+  const padLabels = {
+    Q: {
+      "Heater Kit": "Heater 1",
+      "Smooth Piano Kit": "Chord 1",
+      "Heater Kit Src": Heater1,
+      "Smooth Piano Kit Src": Chord1,
+    },
+    W: {
+      "Heater Kit": "Heater 2",
+      "Smooth Piano Kit": "Chord 2",
+      "Heater Kit Src": Heater2,
+      "Smooth Piano Kit Src": Chord2,
+    },
+    E: {
+      "Heater Kit": "Heater 3",
+      "Smooth Piano Kit": "Chord 3",
+      "Heater Kit Src": Heater3,
+      "Smooth Piano Kit Src": Chord3,
+    },
+    A: {
+      "Heater Kit": "Heater 4",
+      "Smooth Piano Kit": "Shaker",
+      "Heater Kit Src": Heater4,
+      "Smooth Piano Kit Src": Shaker,
+    },
+    S: {
+      "Heater Kit": "Clap",
+      "Smooth Piano Kit": "Open HH",
+      "Heater Kit Src": Clap,
+      "Smooth Piano Kit Src": OpenHH2,
+    },
+    D: {
+      "Heater Kit": "Open HH",
+      "Smooth Piano Kit": "Closed HH",
+      "Heater Kit Src": OpenHH,
+      "Smooth Piano Kit Src": ClosedHH2,
+    },
+    Z: {
+      "Heater Kit": "Kick n' Hat",
+      "Smooth Piano Kit": "Punchy Kick",
+      "Heater Kit Src": KickNHat,
+      "Smooth Piano Kit Src": PunchyKick,
+    },
+    X: {
+      "Heater Kit": "Kick",
+      "Smooth Piano Kit": "Side Stick",
+      "Heater Kit Src": Kick,
+      "Smooth Piano Kit Src": SideStick,
+    },
+    C: {
+      "Heater Kit": "Closed HH",
+      "Smooth Piano Kit": "Snare",
+      "Heater Kit Src": ClosedHH,
+      "Smooth Piano Kit Src": Snare,
+    },
+  };
 
-    const playPad = (key) => {
-      setKey(key);
-      const audio = document.getElementById(key);
+  const playPad = (key) => {
+    setKey(key);
+    const audio = document.getElementById(key);
+    if (audio) {
       audio.play();
       audio.currentTime = 0;
       audio.volume = volume / 100;
-    };
+    }
+    focusRef.current = padLabels[key]?.[kit];
+  };
 
-    const clickPad2 = (e, key) => {
-      if (power) {
-        if (e.target.innerText === key) {
-          playPad(key);
-        }
-      }
-    };
-
-    const pressKey2 = (e, key) => {
-      if (e?.code === `Key${key}`) {
+  const clickPad = (e, key) => {
+    if (power) {
+      if (e.target.innerText === key) {
         playPad(key);
       }
-    };
+    }
+  };
 
+  const getAudioSrc = (key, kit) => padLabels[key]?.[`${kit} Src`];
+
+  const pads = keysArr.map((key) => {
     return (
       <DrumPad
         key={key}
         className="drum-pad"
         id={`pad-${key.toLowerCase()}`}
-        onClick={clickPad2}
+        onClick={(e) => clickPad(e, key)}
       >
         {key}
-        <audio src={audioSrc} className="clip" id={key} />
+        <audio src={getAudioSrc(key, kit)} className="clip" id={key} />
       </DrumPad>
     );
   });
 
+  const pressKey = (e) => {
+    const key = e?.code.slice(3); /* e.code for example, "KeyQ" */
+    playPad(key);
+    const padStyle = document.getElementById(
+      `pad-${key?.toLowerCase()}`
+    )?.style;
+    padStyle?.setProperty("box-shadow", "none");
+    padStyle?.setProperty("background-color", "orange");
+  };
+
+  const releaseKey = (e) => {
+    const key = e?.code.slice(3);
+    const padStyle = document.getElementById(
+      `pad-${key?.toLowerCase()}`
+    )?.style;
+    padStyle?.setProperty("background-color", "#8d8d8d");
+    padStyle?.setProperty("box-shadow", "3px 3px 5px black");
+  };
+
   useEffect(() => {
     document.addEventListener("keydown", pressKey);
+    document.addEventListener("keyup", releaseKey);
     pressKey();
-    return () => document.removeEventListener("keydown", pressKey);
+    releaseKey();
+    return () => {
+      document.removeEventListener("keydown", pressKey);
+      document.removeEventListener("keyup", releaseKey);
+    };
   }, []);
 
   return (
