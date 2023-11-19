@@ -19,7 +19,7 @@ import SideStick from "./assets/sounds/side_stick_1.mp3";
 import Snare from "./assets/sounds/Brk_Snr.mp3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFreeCodeCamp } from "@fortawesome/free-brands-svg-icons";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const DrumContainer = styled.div`
   width: 660px;
@@ -37,7 +37,7 @@ const PadsContainer = styled.div`
   flex-wrap: wrap;
   gap: 10px;
 `;
-const DrumPad = styled.label`
+const DrumPad = styled.div`
   width: 100px;
   height: 80px;
   border: none;
@@ -50,9 +50,10 @@ const DrumPad = styled.label`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-`;
-const RadioButton = styled.input`
-  display: none;
+  &:active {
+    box-shadow: none;
+    background-color: orange;
+  }
 `;
 const ControlsContainer = styled.div`
   width: 40%;
@@ -146,7 +147,7 @@ const VolumeSlider = styled.input`
 const IconContainer = styled.div`
   height: 20px;
   position: absolute;
-  top: 5px;
+  top: 7px;
   right: 5px;
   display: flex;
   align-items: center;
@@ -154,27 +155,32 @@ const IconContainer = styled.div`
   & > span {
     font-size: 1.3rem;
     font-style: italic;
+    font-weight: bold;
   }
 `;
 const StyledIcon = styled(FontAwesomeIcon)`
   font-size: 1.3rem;
   border-bottom: 1px solid black;
+  transform: skewX(-15deg);
 `;
-//currently not bold or italic
+//currently not bold
 
 const Drum = () => {
   const focusRef = useRef("");
-  const [volume, setVolume] = useState("");
-  const handleVolume = (e) => {
+
+  const [power, setPower] = useState(true);
+  const [volume, setVolume] = useState(30);
+  const [kit, setKit] = useState("Heater Kit");
+  const [key, setKey] = useState("");
+
+  const switchPower = () => setPower((prev) => !prev);
+
+  const changeVolume = (e) => {
     setVolume(e.target.value);
     focusRef.current = `Volume: ${volume}`;
   };
   //volume doesn't seem to be able to reach 0 or 100
 
-  const [power, setPower] = useState(true);
-  const handlePower = () => setPower((prev) => !prev);
-
-  const [kit, setKit] = useState("Heater Kit");
   const handleBank = () => {
     if (kit === "Heater Kit") {
       setKit("Smooth Piano Kit");
@@ -185,194 +191,256 @@ const Drum = () => {
     }
   };
 
+  const playPadQ = () => {
+    setKey("Q");
+    document.getElementById("Q").play();
+    document.getElementById("Q").currentTime = 0;
+    document.getElementById("Q").volume = volume / 100;
+    if (kit === "Heater Kit") {
+      focusRef.current = "Heater 1";
+    } else {
+      focusRef.current = "Chord 1";
+    }
+  };
+  const playPadW = () => {
+    setKey("W");
+    document.getElementById("W").play();
+    document.getElementById("W").currentTime = 0;
+    document.getElementById("W").volume = volume / 100;
+    if (kit === "Heater Kit") {
+      focusRef.current = "Heater 2";
+    } else {
+      focusRef.current = "Chord 2";
+    }
+  };
+  const playPadE = () => {
+    setKey("E");
+    document.getElementById("E").play();
+    document.getElementById("E").currentTime = 0;
+    document.getElementById("E").volume = volume / 100;
+    if (kit === "Heater Kit") {
+      focusRef.current = "Heater 3";
+    } else {
+      focusRef.current = "Chord 3";
+    }
+  };
+  const playPadA = () => {
+    setKey("A");
+    document.getElementById("A").play();
+    document.getElementById("A").currentTime = 0;
+    document.getElementById("A").volume = volume / 100;
+    if (kit === "Heater Kit") {
+      focusRef.current = "Heater 4";
+    } else {
+      focusRef.current = "Shaker";
+    }
+  };
+  const playPadS = () => {
+    setKey("S");
+    document.getElementById("S").play();
+    document.getElementById("S").currentTime = 0;
+    document.getElementById("S").volume = volume / 100;
+    if (kit === "Heater Kit") {
+      focusRef.current = "Clap";
+    } else {
+      focusRef.current = "Open HH";
+    }
+  };
+  const playPadD = () => {
+    setKey("D");
+    document.getElementById("D").play();
+    document.getElementById("D").currentTime = 0;
+    document.getElementById("D").volume = volume / 100;
+    if (kit === "Heater Kit") {
+      focusRef.current = "Open HH";
+    } else {
+      focusRef.current = "Closed HH";
+    }
+  };
+  const playPadZ = () => {
+    setKey("Z");
+    document.getElementById("Z").play();
+    document.getElementById("Z").currentTime = 0;
+    document.getElementById("Z").volume = volume / 100;
+    if (kit === "Heater Kit") {
+      focusRef.current = "Kick n' Hat";
+    } else {
+      focusRef.current = "Punchy Kick";
+    }
+  };
+  const playPadX = () => {
+    setKey("X");
+    document.getElementById("X").play();
+    document.getElementById("X").currentTime = 0;
+    document.getElementById("X").volume = volume / 100;
+    if (kit === "Heater Kit") {
+      focusRef.current = "Kick";
+    } else {
+      focusRef.current = "Side Stick";
+    }
+  };
+  const playPadC = () => {
+    setKey("C");
+    document.getElementById("C").play();
+    document.getElementById("C").currentTime = 0;
+    document.getElementById("C").volume = volume / 100;
+    if (kit === "Heater Kit") {
+      focusRef.current = "Closed HH";
+    } else {
+      focusRef.current = "Snare";
+    }
+  };
+
+  const clickPad = (e) => {
+    if (power) {
+      if (e.target.innerText === "Q") {
+        playPadQ();
+      } else if (e.target.innerText === "W") {
+        playPadW();
+      } else if (e.target.innerText === "E") {
+        playPadE();
+      } else if (e.target.innerText === "A") {
+        playPadA();
+      } else if (e.target.innerText === "S") {
+        playPadS();
+      } else if (e.target.innerText === "D") {
+        playPadD();
+      } else if (e.target.innerText === "Z") {
+        playPadZ();
+      } else if (e.target.innerText === "X") {
+        playPadX();
+      } else if (e.target.innerText === "C") {
+        playPadC();
+      }
+    }
+  };
+
+  const pressKey = (e) => {
+    if (e?.code === "KeyQ") {
+      playPadQ();
+      // document
+      //   .getElementById("pad-q")
+      //   .style.setProperty("background-color", "orange");
+    } else if (e?.code === "KeyW") {
+      playPadW();
+    } else if (e?.code === "KeyE") {
+      playPadE();
+    } else if (e?.code === "KeyA") {
+      playPadA();
+    } else if (e?.code === "KeyS") {
+      playPadS();
+    } else if (e?.code === "KeyD") {
+      playPadD();
+    } else if (e?.code === "KeyZ") {
+      playPadZ();
+    } else if (e?.code === "KeyX") {
+      playPadX();
+    } else if (e?.code === "KeyC") {
+      playPadC();
+    }
+  };
+
+  const keysArr = ["Q", "W", "E", "A", "S", "D", "Z", "X", "C"];
+
+  const pads = keysArr.map((key) => {
+    const audioSrc =
+      key === "Q" && kit === "Heater Kit"
+        ? Heater1
+        : key === "Q" && kit === "Smooth Piano Kit"
+        ? Chord1
+        : key === "W" && kit === "Heater Kit"
+        ? Heater2
+        : key === "W" && kit === "Smooth Piano Kit"
+        ? Chord2
+        : key === "E" && kit === "Heater Kit"
+        ? Heater3
+        : key === "E" && kit === "Smooth Piano Kit"
+        ? Chord3
+        : key === "A" && kit === "Heater Kit"
+        ? Heater4
+        : key === "A" && kit === "Smooth Piano Kit"
+        ? Shaker
+        : key === "S" && kit === "Heater Kit"
+        ? Clap
+        : key === "S" && kit === "Smooth Piano Kit"
+        ? DryOhh
+        : key === "D" && kit === "Heater Kit"
+        ? OpenHH
+        : key === "D" && kit === "Smooth Piano Kit"
+        ? BldH1
+        : key === "Z" && kit === "Heater Kit"
+        ? KickNHat
+        : key === "Z" && kit === "Smooth Piano Kit"
+        ? PunchyKick
+        : key === "X" && kit === "Heater Kit"
+        ? Kick
+        : key === "X" && kit === "Smooth Piano Kit"
+        ? SideStick
+        : key === "C" && kit === "Heater Kit"
+        ? ClosedHH
+        : Snare;
+
+    const playPad = (key) => {
+      setKey(key);
+      const audio = document.getElementById(key);
+      audio.play();
+      audio.currentTime = 0;
+      audio.volume = volume / 100;
+    };
+
+    const clickPad2 = (e, key) => {
+      if (power) {
+        if (e.target.innerText === key) {
+          playPad(key);
+        }
+      }
+    };
+
+    const pressKey2 = (e, key) => {
+      if (e?.code === `Key${key}`) {
+        playPad(key);
+      }
+    };
+
+    return (
+      <DrumPad
+        key={key}
+        className="drum-pad"
+        id={`pad-${key.toLowerCase()}`}
+        onClick={clickPad2}
+      >
+        {key}
+        <audio src={audioSrc} className="clip" id={key} />
+      </DrumPad>
+    );
+  });
+
+  useEffect(() => {
+    document.addEventListener("keydown", pressKey);
+    pressKey();
+    return () => document.removeEventListener("keydown", pressKey);
+  }, []);
+
   return (
     <DrumContainer id="drum-machine">
-      <PadsContainer>
-        <RadioButton type="radio" id="pad-q" name="drum-pad" />
-        <DrumPad
-          className="drum-pad"
-          htmlFor="pad-q"
-          onClick={() => {
-            if (kit === "Heater Kit") {
-              focusRef.current = "Heater 1";
-            } else {
-              focusRef.current = "Chord 1";
-            }
-          }}
-        >
-          Q
-          <audio
-            src={kit === "Heater Kit" ? Heater1 : Chord1}
-            className="clip"
-            id="Q"
-          ></audio>
-        </DrumPad>
-        <RadioButton type="radio" id="pad-w" name="drum-pad" />
-        <DrumPad
-          className="drum-pad"
-          htmlFor="pad-w"
-          onClick={() => {
-            if (kit === "Heater Kit") {
-              focusRef.current = "Heater 2";
-            } else {
-              focusRef.current = "Chord 2";
-            }
-          }}
-        >
-          W
-          <audio
-            src={kit === "Heater Kit" ? Heater2 : Chord2}
-            className="clip"
-            id="W"
-          ></audio>
-        </DrumPad>
-        <RadioButton type="radio" id="pad-e" name="drum-pad" />
-        <DrumPad
-          className="drum-pad"
-          htmlFor="pad-e"
-          onClick={() => {
-            if (kit === "Heater Kit") {
-              focusRef.current = "Heater 3";
-            } else {
-              focusRef.current = "Chord 3";
-            }
-          }}
-        >
-          E
-          <audio
-            src={kit === "Heater Kit" ? Heater3 : Chord3}
-            className="clip"
-            id="E"
-          ></audio>
-        </DrumPad>
-        <RadioButton type="radio" id="pad-a" name="drum-pad" />
-        <DrumPad
-          className="drum-pad"
-          htmlFor="pad-a"
-          onClick={() => {
-            if (kit === "Heater Kit") {
-              focusRef.current = "Heater 4";
-            } else {
-              focusRef.current = "Shaker";
-            }
-          }}
-        >
-          A
-          <audio
-            src={kit === "Heater Kit" ? Heater4 : Shaker}
-            className="clip"
-            id="A"
-          ></audio>
-        </DrumPad>
-        <RadioButton type="radio" id="pad-s" name="drum-pad" />
-        <DrumPad
-          className="drum-pad"
-          htmlFor="pad-s"
-          onClick={() => {
-            if (kit === "Heater Kit") {
-              focusRef.current = "Clap";
-            } else {
-              focusRef.current = "Open HH";
-            }
-          }}
-        >
-          S
-          <audio
-            src={kit === "Heater Kit" ? Clap : DryOhh}
-            className="clip"
-            id="S"
-          ></audio>
-        </DrumPad>
-        <RadioButton type="radio" id="pad-d" name="drum-pad" />
-        <DrumPad
-          className="drum-pad"
-          htmlFor="pad-d"
-          onClick={() => {
-            if (kit === "Heater Kit") {
-              focusRef.current = "Open HH";
-            } else {
-              focusRef.current = "Closed HH";
-            }
-          }}
-        >
-          D
-          <audio
-            src={kit === "Heater Kit" ? OpenHH : BldH1}
-            className="clip"
-            id="D"
-          ></audio>
-        </DrumPad>
-        <RadioButton type="radio" id="pad-z" name="drum-pad" />
-        <DrumPad
-          className="drum-pad"
-          htmlFor="pad-z"
-          onClick={() => {
-            if (kit === "Heater Kit") {
-              focusRef.current = "Kick n' Hat";
-            } else {
-              focusRef.current = "Punchy Kick";
-            }
-          }}
-        >
-          Z
-          <audio
-            src={kit === "Heater Kit" ? KickNHat : PunchyKick}
-            className="clip"
-            id="Z"
-          ></audio>
-        </DrumPad>
-        <RadioButton type="radio" id="pad-x" name="drum-pad" />
-        <DrumPad
-          className="drum-pad"
-          htmlFor="pad-x"
-          onClick={() => {
-            if (kit === "Heater Kit") {
-              focusRef.current = "Kick";
-            } else {
-              focusRef.current = "Side Stick";
-            }
-          }}
-        >
-          X
-          <audio
-            src={kit === "Heater Kit" ? Kick : SideStick}
-            className="clip"
-            id="X"
-          ></audio>
-        </DrumPad>
-        <RadioButton type="radio" id="pad-c" name="drum-pad" />
-        <DrumPad
-          className="drum-pad"
-          htmlFor="pad-c"
-          onClick={() => {
-            if (kit === "Heater Kit") {
-              focusRef.current = "Closed HH";
-            } else {
-              focusRef.current = "Snare";
-            }
-          }}
-        >
-          C
-          <audio
-            src={kit === "Heater Kit" ? ClosedHH : Snare}
-            className="clip"
-            id="C"
-          ></audio>
-        </DrumPad>
-      </PadsContainer>
+      <PadsContainer>{pads}</PadsContainer>
       <ControlsContainer>
         <ControlName>Power</ControlName>
-        <PowerControl onClick={handlePower} $power={power}>
+        <PowerControl onClick={switchPower} $power={power}>
           <div />
         </PowerControl>
-        <DisplayString id="display">{focusRef.current}</DisplayString>
+        <DisplayString id="display">
+          {power ? focusRef.current : ""}
+        </DisplayString>
         <VolumeSlider
           type="range"
           id="volume"
           name="volume"
           min="0"
           max="100"
-          onChange={handleVolume}
+          step="1"
+          value={volume}
+          onChange={changeVolume}
         />
         <ControlName>Bank</ControlName>
         <BankControl onClick={handleBank} $kit={kit}>

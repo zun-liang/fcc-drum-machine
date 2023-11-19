@@ -19,8 +19,8 @@ const App = () => {
     doc.style.setProperty("--app-height", `${window.innerHeight}px`);
   };
   useEffect(() => {
-    setAppHeight();
     window.addEventListener("resize", setAppHeight);
+    setAppHeight();
     return () => window.removeEventListener("resize", setAppHeight);
   }, []);
 
