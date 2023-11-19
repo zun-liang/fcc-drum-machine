@@ -52,7 +52,7 @@ const DrumPad = styled.div`
   cursor: pointer;
   &:active {
     box-shadow: none;
-    background-color: orange;
+    background-color: ${({ $power }) => ($power ? "orange" : "#8d8d8d")};
   }
 `;
 const ControlsContainer = styled.div`
@@ -249,14 +249,16 @@ const Drum = () => {
   };
 
   const playPad = (key) => {
-    setKey(key);
-    const audio = document.getElementById(key);
-    if (audio) {
-      audio.play();
-      audio.currentTime = 0;
-      audio.volume = volume / 100;
+    if (power) {
+      setKey(key);
+      const audio = document.getElementById(key);
+      if (audio) {
+        audio.play();
+        audio.currentTime = 0;
+        audio.volume = volume / 100;
+      }
+      focusRef.current = padLabels[key]?.[kit];
     }
-    focusRef.current = padLabels[key]?.[kit];
   };
 
   const clickPad = (e, key) => {
@@ -276,6 +278,7 @@ const Drum = () => {
         className="drum-pad"
         id={`pad-${key.toLowerCase()}`}
         onClick={(e) => clickPad(e, key)}
+        $power={power}
       >
         {key}
         <audio src={getAudioSrc(key, kit)} className="clip" id={key} />
@@ -285,12 +288,14 @@ const Drum = () => {
 
   const pressKey = (e) => {
     const key = e?.code.slice(3); /* e.code for example, "KeyQ" */
-    playPad(key);
     const padStyle = document.getElementById(
       `pad-${key?.toLowerCase()}`
     )?.style;
     padStyle?.setProperty("box-shadow", "none");
-    padStyle?.setProperty("background-color", "orange");
+    if (power) {
+      playPad(key);
+      padStyle?.setProperty("background-color", "orange");
+    }
   };
 
   const releaseKey = (e) => {
@@ -298,10 +303,12 @@ const Drum = () => {
     const padStyle = document.getElementById(
       `pad-${key?.toLowerCase()}`
     )?.style;
-    padStyle?.setProperty("background-color", "#8d8d8d");
     padStyle?.setProperty("box-shadow", "3px 3px 5px black");
+    if (power) {
+      padStyle?.setProperty("background-color", "#8d8d8d");
+    }
   };
-
+  //when control by keys, power seems to be powerless
   useEffect(() => {
     document.addEventListener("keydown", pressKey);
     document.addEventListener("keyup", releaseKey);
@@ -312,7 +319,7 @@ const Drum = () => {
       document.removeEventListener("keyup", releaseKey);
     };
   }, []);
-
+  console.log(power);
   return (
     <DrumContainer id="drum-machine">
       <PadsContainer>{pads}</PadsContainer>
