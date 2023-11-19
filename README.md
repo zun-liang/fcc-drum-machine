@@ -63,12 +63,12 @@ Users should be able to:
 - how to set up volume
 - input range setup and custom styles
 - keydown event
-- i was stuck: range min and max can not be reached
-- i was stuck: how to set specific element's color for active status
+- i was stuck: range min and max can not be reached because they are strings
+- i was stuck: how to set specific element's color for active status, still stuck here, keys are functioning in a funny way
 
 ### Continued development
 
--
+- maybe use some other html media element properties to achieve more features
 
 ### Helpful Resources
 
