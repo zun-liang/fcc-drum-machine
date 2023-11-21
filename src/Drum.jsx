@@ -1,25 +1,26 @@
+import { faFreeCodeCamp } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+
+import ClosedHH2 from "./assets/sounds/Bld_H1.mp3";
+import Snare from "./assets/sounds/Brk_Snr.mp3";
+import ClosedHH from "./assets/sounds/Cev_H2.mp3";
+import Chord1 from "./assets/sounds/Chord_1.mp3";
+import Chord2 from "./assets/sounds/Chord_2.mp3";
+import Chord3 from "./assets/sounds/Chord_3.mp3";
+import OpenHH2 from "./assets/sounds/Dry_Ohh.mp3";
+import OpenHH from "./assets/sounds/Dsc_Oh.mp3";
+import Shaker from "./assets/sounds/Give_us_a_light.mp3";
 import Heater1 from "./assets/sounds/Heater-1.mp3";
 import Heater2 from "./assets/sounds/Heater-2.mp3";
 import Heater3 from "./assets/sounds/Heater-3.mp3";
 import Heater4 from "./assets/sounds/Heater-4_1.mp3";
 import Clap from "./assets/sounds/Heater-6.mp3";
-import OpenHH from "./assets/sounds/Dsc_Oh.mp3";
 import KickNHat from "./assets/sounds/Kick_n_Hat.mp3";
-import Kick from "./assets/sounds/RP4_KICK_1.mp3";
-import ClosedHH from "./assets/sounds/Cev_H2.mp3";
-import Chord1 from "./assets/sounds/Chord_1.mp3";
-import Chord2 from "./assets/sounds/Chord_2.mp3";
-import Chord3 from "./assets/sounds/Chord_3.mp3";
-import Shaker from "./assets/sounds/Give_us_a_light.mp3";
-import OpenHH2 from "./assets/sounds/Dry_Ohh.mp3";
-import ClosedHH2 from "./assets/sounds/Bld_H1.mp3";
 import PunchyKick from "./assets/sounds/punchy_kick_1.mp3";
+import Kick from "./assets/sounds/RP4_KICK_1.mp3";
 import SideStick from "./assets/sounds/side_stick_1.mp3";
-import Snare from "./assets/sounds/Brk_Snr.mp3";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFreeCodeCamp } from "@fortawesome/free-brands-svg-icons";
-import { useState, useRef, useEffect } from "react";
 
 const DrumContainer = styled.div`
   width: 660px;
@@ -42,18 +43,22 @@ const DrumPad = styled.div`
   height: 80px;
   border: none;
   border-radius: 8px;
-  background-color: #8d8d8d;
-  box-shadow: 3px 3px 5px black;
+  background-color: ${({ $power, $isActive }) =>
+    $isActive && $power ? "orange" : "#8d8d8d"};
+  box-shadow: ${({ $power, $isActive }) =>
+    $isActive && $power
+      ? "none"
+      : !$isActive && $power
+      ? "3px 3px 5px black"
+      : $isActive && !$power
+      ? "none"
+      : "3px 3px 5px black"};
   font-family: "Russo One", sans-serif;
   font-size: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  &:active {
-    box-shadow: none;
-    background-color: ${({ $power }) => ($power ? "orange" : "#8d8d8d")};
-  }
 `;
 const ControlsContainer = styled.div`
   width: 40%;
@@ -171,8 +176,8 @@ const Drum = () => {
   const [volume, setVolume] = useState(30);
   const [kit, setKit] = useState("Heater Kit");
   const [key, setKey] = useState("");
-
   const switchPower = () => setPower((prev) => !prev);
+  const [activePad, setActivePad] = useState(null);
 
   const changeVolume = (e) => {
     setVolume(parseInt(e.target.value, 10));
@@ -262,6 +267,7 @@ const Drum = () => {
   };
 
   const clickPad = (e, key) => {
+    setActivePad(key);
     if (power) {
       if (e.target.innerText === key) {
         playPad(key);
@@ -272,6 +278,7 @@ const Drum = () => {
   const getAudioSrc = (key, kit) => padLabels[key]?.[`${kit} Src`];
 
   const pads = keysArr.map((key) => {
+    const isActive = activePad === key;
     return (
       <DrumPad
         key={key}
@@ -279,6 +286,7 @@ const Drum = () => {
         id={`pad-${key.toLowerCase()}`}
         onClick={(e) => clickPad(e, key)}
         $power={power}
+        $isActive={isActive}
       >
         {key}
         <audio src={getAudioSrc(key, kit)} className="clip" id={key} />
@@ -291,10 +299,13 @@ const Drum = () => {
     const padStyle = document.getElementById(
       `pad-${key?.toLowerCase()}`
     )?.style;
-    padStyle?.setProperty("box-shadow", "none");
+
     if (power) {
       playPad(key);
       padStyle?.setProperty("background-color", "orange");
+      padStyle?.setProperty("box-shadow", "none");
+    } else {
+      padStyle?.setProperty("box-shadow", "none");
     }
   };
 
@@ -303,12 +314,14 @@ const Drum = () => {
     const padStyle = document.getElementById(
       `pad-${key?.toLowerCase()}`
     )?.style;
-    padStyle?.setProperty("box-shadow", "3px 3px 5px black");
     if (power) {
       padStyle?.setProperty("background-color", "#8d8d8d");
+      padStyle?.setProperty("box-shadow", "3px 3px 5px black");
+    } else {
+      padStyle?.setProperty("box-shadow", "3px 3px 5px black");
     }
   };
-  //when control by keys, power seems to be powerless
+
   useEffect(() => {
     document.addEventListener("keydown", pressKey);
     document.addEventListener("keyup", releaseKey);
@@ -318,8 +331,8 @@ const Drum = () => {
       document.removeEventListener("keydown", pressKey);
       document.removeEventListener("keyup", releaseKey);
     };
-  }, []);
-  console.log(power);
+  }, [power]);
+
   return (
     <DrumContainer id="drum-machine">
       <PadsContainer>{pads}</PadsContainer>
