@@ -22,9 +22,11 @@ This is a solution to the [Build a Drum Machine challenge](https://www.freecodec
 Users should be able to:
 
 - View the optimal layout for the site depending on their device's screen size
-- Edit markdown content in editor
-- Preview formatted markdown content in previewer
-- Maximize or minimize editor or previewer
+- Switch power on and off
+- Switch "Heater Kit" or "Smooth Piano Kit"
+- Adjust volume
+- Display user's operation on the screen, such as changing volume and playing clips
+- Play clips by mouse or keyboard
 
 ### Screenshot
 
@@ -59,16 +61,14 @@ Users should be able to:
 
 ### What I learned
 
-- how to use audio
-- how to set up volume
-- input range setup and custom styles
-- keydown event
-- i was stuck: range min and max can not be reached because they are strings
-- i was stuck: how to set specific element's color for active status, still stuck here, keys are functioning in a funny way
+- How to work with audio element
+- How to set up media volume
+- How to create a volume slider using input[type=range] and apply custom styles
+- How to work with keydown event
 
 ### Continued development
 
-- maybe use some other html media element properties to achieve more features
+- Add more features for the drum machine by utilizing HTML media element properties
 
 ### Helpful Resources
 
