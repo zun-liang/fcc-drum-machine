@@ -23,24 +23,31 @@ import Kick from "./assets/sounds/RP4_KICK_1.mp3";
 import SideStick from "./assets/sounds/side_stick_1.mp3";
 
 const DrumContainer = styled.div`
-  width: 660px;
-  height: 320px;
+  width: 90%;
   border: 5px solid orange;
   background-color: #b3b3b3;
-  padding: 1.5rem;
+  padding: 2.5rem 2rem;
   display: flex;
   justify-content: space-between;
   position: relative;
+  @media (min-width: 700px) {
+    width: 660px;
+    height: 320px;
+    padding: 1.5rem;
+  }
 `;
 const PadsContainer = styled.div`
   width: 55%;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 5%;
+  @media (min-width: 700px) {
+    gap: 10px;
+  }
 `;
 const DrumPad = styled.div`
-  width: 100px;
-  height: 80px;
+  width: 30%;
+  height: 40px;
   border: none;
   border-radius: 8px;
   background-color: ${({ $power, $isActive }) =>
@@ -59,17 +66,28 @@ const DrumPad = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  @media (min-width: 700px) {
+    width: 100px;
+    height: 80px;
+  }
 `;
 const ControlsContainer = styled.div`
-  width: 40%;
+  width: 35%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 0.7rem;
+  @media (min-width: 700px) {
+    width: 40%;
+    gap: 1rem;
+  }
 `;
 const ControlName = styled.p`
-  margin-bottom: -1rem;
+  margin-bottom: -0.7rem;
+  @media (min-width: 700px) {
+    margin-bottom: -1rem;
+  }
 `;
 const PowerControl = styled.div`
   width: 54px;
@@ -90,12 +108,17 @@ const BankControl = styled(PowerControl)`
     $kit === "Heater Kit" ? "flex-start" : "flex-end"};
 `;
 const DisplayString = styled.p`
-  width: 200px;
-  height: 50px;
+  width: 100%;
   background-color: #8d8d8d;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  padding: 1rem;
+  @media (min-width: 700px) {
+    width: 200px;
+    height: 50px;
+  }
 `;
 const VolumeSlider = styled.input`
   -webkit-appearance: none;
