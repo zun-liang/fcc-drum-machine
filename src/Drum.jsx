@@ -273,6 +273,9 @@ const Drum = () => {
         playPad(key);
       }
     }
+    setTimeout(() => {
+      setActivePad(null);
+    }, 100);
   };
 
   const getAudioSrc = (key, kit) => padLabels[key]?.[`${kit} Src`];
